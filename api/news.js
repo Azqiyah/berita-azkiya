@@ -1,6 +1,6 @@
 export default async function handler(req, res) {
   const { q } = req.query;
-  const apiKey = "a418492213764722b4d787a3f532c221";
+  const apiKey = "f11a80e437c544af98efa3897d45c00f";
   const url = `https://newsapi.org/v2/everything?q=${
     q || "tesla"
   }&pageSize=12&sortBy=publishedAt&apiKey=${apiKey}`;
