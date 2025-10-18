@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Qia News Portal</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+  <style>
+    /* ===== Tema Biru Muda Elegan ===== */
+    body {
+      background: linear-gradient(to bottom right, #dbeafe, #f0f9ff);
+      color: #1e3a8a;
+      font-family: 'Poppins', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ===== Navbar ===== */
+    .navbar {
+      background: linear-gradient(90deg, #60a5fa, #93c5fd);
+      box-shadow: 0 2px 10px rgba(0,0,0,0.15);
+    }
+
+    .navbar-brand {
+      font-weight: 700;
+      font-size: 1.6rem;
+      color: #ffffff !important;
+      text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+    }
+
+    .nav-link {
+      color: #eef2ff !important;
+      font-weight: 500;
+      transition: 0.3s;
+    }
+
+    .nav-link:hover {
+      color: #ffffff !important;
+      text-decoration: underline;
+    }
+
+    /* ===== Header Section ===== */
+    h2 {
+      color: #1d4ed8;
+      font-weight: 700;
+    }
+
+    p.text-muted {
+      color: #334155 !important;
+    }
+
+    #filterInput {
+      border-radius: 30px;
+      border: 2px solid #60a5fa;
+      background-color: #ffffff;
+      color: #1e3a8a;
+      padding: 10px 20px;
+      box-shadow: 0 3px 8px rgba(96,165,250,0.2);
+    }
+
+    #filterInput::placeholder {
+      color: #93c5fd;
+    }
+
+    /* ===== Card Berita ===== */
+    .card {
+      background-color: #ffffff;
+      border: none;
+      border-radius: 16px;
+      box-shadow: 0 4px 12px rgba(59,130,246,0.15);
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+
+    .card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 8px 24px rgba(59,130,246,0.3);
+    }
+
+    .card-img-top {
+      height: 160px;
+      object-fit: cover;
+    }
+
+    .card-title {
+      color: #1d4ed8;
+      font-size: 1rem;
+      font-weight: 600;
+    }
+
+    .card-text {
+      color: #334155;
+      font-size: 0.9rem;
+    }
+
+    .btn-primary {
+      background-color: #3b82f6;
+      border: none;
+      border-radius: 25px;
+      padding: 6px 16px;
+      font-size: 0.85rem;
+      transition: 0.3s;
+    }
+
+    .btn-primary:hover {
+      background-color: #2563eb;
+    }
+
+    /* ===== Footer ===== */
+    footer {
+      background: linear-gradient(90deg, #60a5fa, #93c5fd);
+      color: #fff;
+      padding: 15px 0;
+      margin-top: auto;
+      font-size: 0.9rem;
+      box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+    }
+
+    footer a {
+      color: #e0f2fe;
+      text-decoration: none;
+    }
+
+    footer a:hover {
+      color: #fff;
+      text-decoration: underline;
+    }
+
+    /* Loader */
+    .loader {
+      text-align: center;
+      font-size: 1.2rem;
+      color: #2563eb;
+      margin: 30px 0;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-dark">
+    <div class="container">
+      <a class="navbar-brand" href="#">QiaNews</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse justify-content-between" id="navbarNav">
+        <ul class="navbar-nav">
+          <li class="nav-item"><a href="#" class="nav-link category" data-category="indonesia">Beranda</a></li>
+          <li class="nav-item"><a href="#" class="nav-link category" data-category="nasional">Nasional</a></li>
+          <li class="nav-item"><a href="#" class="nav-link category" data-category="teknologi">Teknologi</a></li>
+          <li class="nav-item"><a href="#" class="nav-link category" data-category="olahraga">Olahraga</a></li>
+          <li class="nav-item"><a href="#" class="nav-link category" data-category="hiburan">Hiburan</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main -->
+  <main class="container my-5">
+    <section class="text-center mb-4">
+      <h2>Berita Terkini</h2>
+      <p class="text-muted">Temukan berita terbaru dengan tampilan yang segar dan ringan 🌤️</p>
+      <input type="text" id="filterInput" class="form-control w-50 mx-auto" placeholder="🔍 Cari berita berdasarkan judul...">
+    </section>
+
+    <div class="loader">⏳ Sedang memuat berita...</div>
+    <div class="row" id="newsContainer"></div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="text-center">
+    <div class="container">
+      <p>© 2025 QiaNews | Portal Berita Digital dengan Sentuhan Biru Langit</p>
+      <p>
+        <a href="#">Tentang Kami</a> | 
+        <a href="#">Kontak</a> | 
+        <a href="#">Kebijakan Privasi</a>
+      </p>
+    </div>
+  </footer>
+
+  <!-- JS -->
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
+
+  <script>
+    const apiKey = 'f11a80e437c544af98efa3897d45c00f';
+    const container = document.getElementById('newsContainer');
+    const loader = document.querySelector('.loader');
+
+    async function fetchNews(query = 'indonesia') {
+      loader.style.display = 'block';
+      container.innerHTML = '';
+      const url = `https://newsapi.org/v2/everything?q=${query}&sortBy=publishedAt&pageSize=12&language=id&apiKey=${apiKey}`;
+      try {
+        const res = await fetch(url);
+        const data = await res.json();
+        loader.style.display = 'none';
+        displayNews(data.articles);
+      } catch {
+        loader.textContent = "⚠️ Gagal memuat berita.";
+      }
+    }
+
+    function displayNews(articles) {
+      if (!articles || articles.length === 0) {
+        container.innerHTML = `<div class="col-12 text-center text-muted">Tidak ada berita ditemukan.</div>`;
+        return;
+      }
+
+      articles.slice(0, 8).forEach(a => {
+        const img = a.urlToImage || 'https://via.placeholder.com/400x200?text=No+Image';
+        const card = `
+          <div class="col-md-3 mb-4">
+            <div class="card h-100">
+              <img src="${img}" class="card-img-top">
+              <div class="card-body">
+                <h5 class="card-title">${a.title || 'Tanpa Judul'}</h5>
+                <p class="card-text">${a.description || 'Tidak ada deskripsi.'}</p>
+                <a href="${a.url}" target="_blank" class="btn btn-primary btn-sm">Baca Selengkapnya</a>
+              </div>
+            </div>
+          </div>
+        `;
+        container.innerHTML += card;
+      });
+    }
+
+    document.getElementById('filterInput').addEventListener('input', function() {
+      const keyword = this.value.toLowerCase();
+      document.querySelectorAll('.card').forEach(card => {
+        card.style.display = card.textContent.toLowerCase().includes(keyword) ? 'block' : 'none';
+      });
+    });
+
+    document.querySelectorAll('.category').forEach(link => {
+      link.addEventListener('click', e => {
+        e.preventDefault();
+        fetchNews(link.dataset.category);
+      });
+    });
+
+    fetchNews();
+  </script>
+</body>
+</html>
