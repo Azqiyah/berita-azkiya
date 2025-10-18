@@ -188,10 +188,6 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
 
   <script>
-    const apiKey = 'f11a80e437c544af98efa3897d45c00f';
-    const container = document.getElementById('newsContainer');
-    const loader = document.querySelector('.loader');
-
 async function fetchNews(query = "umum") {
         const url = `/api/news?q=${query}`; // ← gunakan proxy backend
 
@@ -296,4 +292,5 @@ async function fetchNews(query = "umum") {
   </script>
 </body>
 </html>
+
 
