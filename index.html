@@ -192,59 +192,108 @@
     const container = document.getElementById('newsContainer');
     const loader = document.querySelector('.loader');
 
-    async function fetchNews(query = 'indonesia') {
-      loader.style.display = 'block';
-      container.innerHTML = '';
-      const url = `https://newsapi.org/v2/everything?q=${query}&sortBy=publishedAt&pageSize=12&language=id&apiKey=${apiKey}`;
-      try {
-        const res = await fetch(url);
-        const data = await res.json();
-        loader.style.display = 'none';
-        displayNews(data.articles);
-      } catch {
-        loader.textContent = "⚠️ Gagal memuat berita.";
-      }
-    }
+async function fetchNews(query = "umum") {
+        const url = `/api/news?q=${query}`; // ← gunakan proxy backend
 
-    function displayNews(articles) {
-      if (!articles || articles.length === 0) {
-        container.innerHTML = `<div class="col-12 text-center text-muted">Tidak ada berita ditemukan.</div>`;
-        return;
+        const pageTitle = document.getElementById("pageTitle");
+        const pageDesc = document.getElementById("pageDesc");
+        const newsCards = document.getElementById("newsCards");
+
+        newsCards.classList.remove("show");
+        pageTitle.classList.remove("show");
+        pageDesc.classList.remove("show");
+
+        if (query === "umum") {
+          pageTitle.textContent = "Berita Hari Ini";
+        } else {
+          pageTitle.textContent =
+            query.charAt(0).toUpperCase() + query.slice(1);
+        }
+        pageDesc.textContent =
+          categoryDescriptions[query] || categoryDescriptions.umum;
+
+        try {
+          const response = await fetch(url);
+          const data = await response.json();
+
+          if (data.status === "error") {
+            displayError(data.message);
+          } else if (!data.articles || data.articles.length === 0) {
+            displayError("Berita tidak ditemukan untuk kategori tersebut.");
+          } else {
+            allArticles = data.articles;
+            displayNews(allArticles);
+          }
+
+          setTimeout(() => {
+            newsCards.classList.add("show");
+            pageTitle.classList.add("show");
+            pageDesc.classList.add("show");
+          }, 200);
+        } catch (error) {
+          displayError(
+            "Terjadi kesalahan saat memuat berita. Periksa koneksi internet Anda."
+          );
+        }
       }
 
-      articles.slice(0, 8).forEach(a => {
-        const img = a.urlToImage || 'https://via.placeholder.com/400x200?text=No+Image';
-        const card = `
-          <div class="col-md-3 mb-4">
-            <div class="card h-100">
-              <img src="${img}" class="card-img-top">
-              <div class="card-body">
-                <h5 class="card-title">${a.title || 'Tanpa Judul'}</h5>
-                <p class="card-text">${a.description || 'Tidak ada deskripsi.'}</p>
-                <a href="${a.url}" target="_blank" class="btn btn-primary btn-sm">Baca Selengkapnya</a>
+      function displayError(message) {
+        const alertBox = document.getElementById("alertBox");
+        alertBox.innerHTML = `<div class="alert alert-danger text-center">${message}</div>`;
+      }
+
+      function displayNews(articles) {
+        const newsCards = document.getElementById("newsCards");
+        newsCards.innerHTML = "";
+
+        const sliced = articles.slice(0, 12);
+        sliced.forEach((article) => {
+          newsCards.innerHTML += `
+            <div class="col-md-4 mb-4">
+              <div class="card bg-secondary text-white h-100 shadow rounded">
+                <img src="${
+                  article.urlToImage ||
+                  "https://via.placeholder.com/400x200?text=No+Image"
+                }" class="card-img-top" alt="Gambar berita">
+                <div class="card-body d-flex flex-column">
+                  <h5 class="card-title">${
+                    article.title || "Tidak ada judul"
+                  }</h5>
+                  <p class="card-text text-muted small mb-2">${new Date(
+                    article.publishedAt
+                  ).toLocaleDateString("id-ID")}</p>
+                  <p class="card-text">${
+                    article.description || "Tidak ada deskripsi."
+                  }</p>
+                  <a href="${
+                    article.url
+                  }" target="_blank" class="btn btn-primary mt-auto">Baca Selengkapnya</a>
+                </div>
               </div>
             </div>
-          </div>
-        `;
-        container.innerHTML += card;
-      });
-    }
+          `;
+        });
+      }
 
-    document.getElementById('filterInput').addEventListener('input', function() {
-      const keyword = this.value.toLowerCase();
-      document.querySelectorAll('.card').forEach(card => {
-        card.style.display = card.textContent.toLowerCase().includes(keyword) ? 'block' : 'none';
+      document.getElementById("query").addEventListener("input", function (e) {
+        const keyword = e.target.value.toLowerCase();
+        const filtered = allArticles.filter(
+          (article) =>
+            article.title && article.title.toLowerCase().includes(keyword)
+        );
+        displayNews(filtered);
       });
-    });
 
-    document.querySelectorAll('.category').forEach(link => {
-      link.addEventListener('click', e => {
-        e.preventDefault();
-        fetchNews(link.dataset.category);
-      });
-    });
+      document
+        .getElementById("searchForm")
+        .addEventListener("submit", function (e) {
+          e.preventDefault();
+          const query = document.getElementById("query").value.trim();
+          fetchNews(query || "umum");
+        });
 
-    fetchNews();
+      fetchNews("umum");
   </script>
 </body>
 </html>
+
